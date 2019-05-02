@@ -14,6 +14,29 @@ type Stu struct {
 	Address string
 }
 
+func modifyUser(users map[string]map[string]string, name string, nickname string) {
+
+	//判断user中是否有name：key
+	_, findRes := users[name]
+	if findRes == true {
+		fmt.Printf("存在")
+		users[name]["pwd"] = "8888"
+	} else if findRes == false {
+		users[name] = make(map[string]string, 2)
+		users[name]["pwd"] = "8888"
+		users[name]["nickname"] = nickname
+	}
+
+	// if users[name] != nil{
+	// 	//有这个用户
+	// 	fmt.Printf("存在")
+	// 	users[name]["pwd"] = "888888"
+	// }else{
+	// 	users[name] = make(map[string]string,2)
+	// 	users[name]["pwd"] = "8888"
+	// 	user[name]["nickname"] = nickname
+	// }
+}
 func main() {
 	// var a map[string]string
 	// //1.使用map前，先make，先给map分配数据空间
@@ -60,7 +83,7 @@ func main() {
 	// //heros = make(map[string]string)
 	// //fmt.Println(heros)
 	// //4.查找
-	// //val,findRes = heros["no1"]--存在findRes = true
+	// //val,findRes := heros["no1"]--存在findRes = true
 	// val, findRes := heros["hero2"]
 	// if findRes == true {
 	// 	fmt.Println("有，", val)
@@ -149,26 +172,36 @@ func main() {
 	//1.map是引用类型的，遵守引用类型传递的机制，在一个函数接收map，修改后，会直接修改原来的map--切片也是一样的
 	//2.map能够动态增长
 
-	map1 := make(map[int]int, 2)
-	map1[1] = 90
-	map1[2] = 88
-	map1[10] = 1
-	map1[20] = 2
-	modify(map1)
-	fmt.Println(map1)
+	// map1 := make(map[int]int, 2)
+	// map1[1] = 90
+	// map1[2] = 88
+	// map1[10] = 1
+	// map1[20] = 2
+	// modify(map1)
+	// fmt.Println(map1)
 
-	//3.map的value为student的结构体更加合适 struct
-	//3.1map的key是id
-	//3.1value包含学生名字，年龄，地址
-	stu := make(map[int]Stu, 10)
-	Stu1 := Stu{"tom", 18, "北京"}
-	Stu2 := Stu{"mary", 20, "上海"}
-	stu[1] = Stu1
-	stu[2] = Stu2
-	fmt.Println(stu)
-	//4.遍历
-	for k, v := range stu {
-		fmt.Printf("学生的编号：%v，学生的名字：%v,学生的年龄：%v，住址：%v\n", k, v.Name, v.Age, v.Address)
-	}
+	// //3.map的value为student的结构体更加合适 struct
+	// //3.1map的key是id
+	// //3.1value包含学生名字，年龄，地址
+	// stu := make(map[int]Stu, 10)
+	// Stu1 := Stu{"tom", 18, "北京"}
+	// Stu2 := Stu{"mary", 20, "上海"}
+	// stu[1] = Stu1
+	// stu[2] = Stu2
+	// fmt.Println(stu)
+	// //4.遍历
+	// for k, v := range stu {
+	// 	fmt.Printf("学生的编号：%v，学生的名字：%v,学生的年龄：%v，住址：%v\n", k, v.Name, v.Age, v.Address)
+	// }
 
+	//5.练习：
+	//使用map[string]map[string]string的map类型 key表示用户名 如果某个用户名存在就讲起密码修改成88888，如果不存在就增加该信息， 包括昵称nickname 和密码
+	//编写modifyUser(users map[string]map[string]string, name string)完成上述
+	var users = make(map[string]map[string]string, 10)
+	users["tom"] = make(map[string]string, 2)
+	users["tom"]["pwd"] = "9999"
+	users["tom"]["nickname"] = "ooo"
+	modifyUser(users, "tom", "tom-jj")
+	modifyUser(users, "marr", "tom-wife")
+	fmt.Println(users)
 }
