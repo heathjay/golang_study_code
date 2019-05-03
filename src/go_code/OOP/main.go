@@ -155,6 +155,8 @@ func main() {
 	JsonMonster, _ := json.Marshal(monster)
 	fmt.Println("jsonStr", string(JsonMonster))
 	//jsonStr {"Name":"牛魔王","Age":500}
-	//很多程序员不是很喜欢首字母大写，
+	//很多程序员不是很喜欢首字母大写，所以用tag:`json:"name"`
+	//jsonStr {"name":"牛魔王","age":500}
+	//使用到了反射机制，后面仍然会介绍
 
 }
