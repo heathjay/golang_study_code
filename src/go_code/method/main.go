@@ -138,6 +138,6 @@ func main() {
 	fmt.Println(&stu) //传一个地址过去name==[tom] age=[20]
 
 	(&stu).test()
-	fmt.Println(stu)
+	fmt.Println(stu) //只关注方法类型，本质仍然是值拷贝，
 
 }
