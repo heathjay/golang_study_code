@@ -24,15 +24,26 @@ func (hs HeroSlice) Len() int {
 //less这个方法决定你使用什么标准进行排序
 //1.按年龄从小到达排序
 func (hs HeroSlice) Less(i, j int) bool {
-	//return hs[i].Age < hs[j].Age
+	return hs[i].Age < hs[j].Age
 	//改成对名字排序
-	return hs[i].Name < hs[j].Name
+	//return hs[i].Name < hs[j].Name
 }
 
 func (hs HeroSlice) Swap(i, j int) {
-	tmp := hs[i]
-	hs[i] = hs[j]
-	hs[j] = tmp
+	//交换有点繁琐
+	// tmp := hs[i]
+	// hs[i] = hs[j]
+	// hs[j] = tmp
+
+	//等价于
+	hs[i], hs[j] = hs[j], hs[i]
+}
+
+//学生结构体
+type Student struct {
+	Name  string
+	Age   int
+	Score float64
 }
 
 //实现了interface 这个接口 就可以满足了。
