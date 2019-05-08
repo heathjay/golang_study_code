@@ -7,7 +7,8 @@ import (
 //必要字段
 //就是test
 type FamilyAccount struct {
-
+	name string
+	pwd  string
 	//声明一个变量接收用户输入的选项
 	key string
 	//声明一个变量来控制是否退出for循环
@@ -39,14 +40,27 @@ func NewFamilyAccount() *FamilyAccount {
 	}
 }
 
-func (this *FamilyAccount) DisplayMain() {
+func (this *FamilyAccount) certificate() {
+	for {
+		fmt.Println("input your name:")
+		fmt.Scanln(&this.name)
+		fmt.Println("input pwd")
+		fmt.Scanln(&this.pwd)
+		if this.name == "jiang" && this.pwd == "888" {
+			break
+		}
+	}
+}
 
+func (this *FamilyAccount) DisplayMain() {
+	this.certificate()
 	for {
 		fmt.Println("------------家庭收支记账软件-----------")
 		fmt.Println("			1.收支明细")
 		fmt.Println("			2.登记收入")
 		fmt.Println("			3.登记支出")
-		fmt.Println("			4.退出软件")
+		fmt.Println("			4.transfor")
+		fmt.Println("			5.退出软件")
 		fmt.Println("请选择1-4")
 		fmt.Scanln(&this.key)
 		switch this.key {
@@ -57,6 +71,8 @@ func (this *FamilyAccount) DisplayMain() {
 		case "3":
 			this.pay()
 		case "4":
+			this.translate()
+		case "5":
 			this.quite()
 		default:
 			fmt.Println("请输入正确的选项")
@@ -67,6 +83,19 @@ func (this *FamilyAccount) DisplayMain() {
 	}
 }
 
+func (this *FamilyAccount) translate() {
+	fmt.Println("input money")
+	fmt.Scanln(&this.money)
+	if this.money < this.balance {
+		this.balance -= this.money
+		fmt.Println("本次支出的说明:")
+		fmt.Scanln(&this.note)
+		this.details += fmt.Sprintf("\n收入\t%v\t\t%v\t\t%v", this.balance, this.money, this.note)
+		this.flag = true
+	} else {
+		fmt.Println("bad job")
+	}
+}
 func (this *FamilyAccount) DisplayDetails() {
 	fmt.Println("------------当前支付明细记录-----------")
 	if this.flag {
@@ -94,12 +123,13 @@ func (this *FamilyAccount) pay() {
 	if this.money > this.balance {
 		fmt.Println("bad job")
 		// return
+	} else {
+		this.balance -= this.money
+		fmt.Println("本次支出的说明:")
+		fmt.Scanln(&this.note)
+		this.details += fmt.Sprintf("\n收入\t%v\t\t%v\t\t%v", this.balance, this.money, this.note)
+		this.flag = true
 	}
-	this.balance -= this.money
-	fmt.Println("本次支出的说明:")
-	fmt.Scanln(&this.note)
-	this.details += fmt.Sprintf("\n收入\t%v\t\t%v\t\t%v", this.balance, this.money, this.note)
-	this.flag = true
 }
 
 func (this *FamilyAccount) quite() {
