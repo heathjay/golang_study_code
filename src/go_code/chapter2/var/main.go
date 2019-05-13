@@ -63,4 +63,33 @@ func main() {
 	var res = str1 + str2
 	fmt.Println("res=", res)
 
+	//常量
+
+	var num int
+	//必须给值
+	const tax int = 0
+	//不能进行修改
+	// tax = 10
+	//只能修饰基本数据类型
+	//
+	fmt.Println(num, tax)
+
+	// const name = "tome" //ok
+	// const tax float64 = 0.08 //ok
+	// const a int //ok
+	// const b1 = 9/33//bad
+	// const c = getVal()//bad
+
+	//简洁写法
+	const (
+		a = 1
+		b = 1
+	)
+	//专业写法
+	const (
+		a1 = iota //0
+		b1
+		c
+	)
+
 }
