@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "CodeLens (Launch) - LeetCode6",
+            "request": "launch",
+            "mainClass": "com.jiang.problems.LeetCode6"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - leetcode1",
+            "request": "launch",
+            "mainClass": "com.jiang.problems.leetcode1"
+        },
+        {
             "name": "Launch",
             "type": "go",
             "request": "launch",

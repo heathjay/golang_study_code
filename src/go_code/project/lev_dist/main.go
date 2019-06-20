@@ -25,7 +25,7 @@ func Lev_dist(str string, targe string) int {
 	if width == 1 {
 		return len(str)
 	}
-	fmt.Println("(******************)")
+	//	fmt.Println("(******************)")
 	//算法
 
 	for i := 1; i < height; i++ {
@@ -39,9 +39,9 @@ func Lev_dist(str string, targe string) int {
 
 	}
 
-	for _, v := range mtr {
-		fmt.Println(v)
-	}
+	// for _, v := range mtr {
+	// 	fmt.Println(v)
+	// }
 	return mtr[len(str)][len(targe)]
 
 }
