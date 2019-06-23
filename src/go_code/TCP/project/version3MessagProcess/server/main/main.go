@@ -1,40 +1,25 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	utils "go_code/TCP/project/version3MessagProcess/common"
-	"go_code/TCP/project/version3MessagProcess/common/message"
-	"io"
 	"net"
 )
 
 func process(conn net.Conn) {
 	defer conn.Close()
-
-	for {
-		//循环读取客户端发消息
-		//直接封装成函数，返回一个message和一个err
-		mes, err := utils.ReadPkg(conn)
-		if err != nil {
-			if err == io.EOF {
-				fmt.Println("client out,server up")
-				return
-			} else {
-				fmt.Println("reading err=", err)
-				return
-			}
-
-		}
-		//fmt.Println("mes=", mes)
-		err = severProcessMes(conn, &mes)
-		if err != nil {
-			return
-		}
+	//创建一个总控实例
+	processor := &Processor{
+		Conn: conn,
+	}
+	err := processor.processUnit()
+	if err != nil {
+		fmt.Println("协程出错：", err)
+		return
 	}
 }
 
 //登陆请求
+/*
 func serverProcessLogin(conn net.Conn, mes *message.Message) (err error) {
 	//核心代码
 	var loginmes message.LoginMes
@@ -77,7 +62,7 @@ func serverProcessLogin(conn net.Conn, mes *message.Message) (err error) {
 	err = utils.WritePkg(conn, data)
 	return
 }
-
+*/
 /*
 func writePkg(conn net.Conn, data []byte) (err error) {
 	//长度
@@ -99,6 +84,7 @@ func writePkg(conn net.Conn, data []byte) (err error) {
 }
 */
 //根据客户端发送的消息种类不同，决定调用哪一个函数
+/*
 func severProcessMes(conn net.Conn, mes *message.Message) (err error) {
 	//用switch比较好
 	switch mes.Type {
@@ -112,7 +98,7 @@ func severProcessMes(conn net.Conn, mes *message.Message) (err error) {
 	}
 	return nil
 }
-
+*/
 /*
 func readPkg(conn net.Conn) (mes message.Message, err error) {
 	buf := make([]byte, 1024*4)
