@@ -1,0 +1,34 @@
+# start container image with SCONE CLI
+docker run -it -v $HOME/.ssh:/root/.xssh  sconecuratedimages/sconecli
+
+
+#ensure that we have ssh credentials to log into servers sgx2, sgx3 and sgx4
+cp -f $HOME/.xssh/* $HOME/.ssh/
+
+
+#install patched driver and patched docker engine and start a new swarm
+scone host install --verbose --name sgx2 --as-manager
+
+
+# check if sgx2 is properly installed
+scone host check --verbose --name sgx2
+
+
+# install sgx3 - does not support systemctl
+scone host install --verbose --name sgx3  --join sgx2
+
+scone host check --verbose --name sgx3
+
+
+# install sgx4 - sgx4 has an unpatched driver that is in use and hence, cannot be offloaded; this results in a warning
+scone host install --verbose --name sgx4  --join sgx2
+
+# now check the status of sgx4
+scone host check --verbose --name sgx4
+
+# show which nodes are participating in the swarm
+ssh sgx2 sudo docker node ls
+
+exit
+exit
+

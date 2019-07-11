@@ -1,0 +1,14 @@
+# start container image with SCONE CLI
+docker run -it -v $HOME/.ssh:/root/.xssh  sconecuratedimages/sconecli
+
+#ensure that we have ssh credentials to log into servers sgx2 and sgx4
+cp -f $HOME/.xssh/* $HOME/.ssh/
+
+# check if all nodes of the swarm managed by host sgx2 are properly labeled
+scone swarm check --verbose --manager sgx2
+
+# list all nodes and their SCONE-relevant labels of the swarm managed by sgx2
+scone swarm ls --manager sgx2
+
+exit
+exit

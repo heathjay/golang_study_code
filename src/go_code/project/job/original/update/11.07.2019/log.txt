@@ -1,0 +1,6 @@
+CLI <https://asciinema.org/a/eQVtcxKmlXvzmZmHatcEqdNNN>
+FLASK <https://asciinema.org/a/Rw4Qc0Kjp1983pqMRrnEQytnl>
+FSPF <https://asciinema.org/a/0JtwNWkHaGrdv7decmX1NfSRr>
+GO <https://asciinema.org/a/flfYXCSE18dZijh4E859GXDP4>
+PYTHON <https://asciinema.org/a/f6JqBBWz0rRp4P1xWeFRKbztX>
+SWARM <https://asciinema.org/a/lNHk5XeEh7yONSap0PNpEb3bj>
