@@ -1,5 +1,3 @@
-//step2 实现用户登陆
-
 package main
 
 import (

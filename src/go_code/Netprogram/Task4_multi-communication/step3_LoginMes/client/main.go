@@ -1,5 +1,3 @@
-//step2 实现用户登陆
-
 package main
 
 import (
@@ -26,7 +24,7 @@ func main() {
 		fmt.Scanf("%d\n", &key)
 		switch key {
 		case 1:
-			fmt.Println("login in successfully")
+			//fmt.Println("login in successfully")
 			loop = false
 		case 2:
 			fmt.Println("registeration ")
@@ -41,17 +39,17 @@ func main() {
 	if key == 1 {
 		//说明用户要登陆
 		fmt.Println("请输入用户的id号码")
-		fmt.Scanf("%d\n", &userId)
+		fmt.Scanln(&userId)
 		fmt.Println("请输入用户的密码")
-		fmt.Scanf("%d\n", &userPw)
+		fmt.Scanln(&userPw)
 		//登陆写在另一个文件,写到另一个文件
 		//设计一个message协议
-		err := login(userId, userPw)
-		if err != nil {
-			fmt.Println("login error")
-		} else {
-			fmt.Println("login succ")
-		}
+		login(userId, userPw)
+		// if err != nil {
+		// 	fmt.Println("login error")
+		// } else {
+		// 	fmt.Println("login succ")
+		// }
 	} else {
 		fmt.Println("register")
 	}
