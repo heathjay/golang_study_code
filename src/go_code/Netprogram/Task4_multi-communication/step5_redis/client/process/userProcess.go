@@ -1,3 +1,5 @@
+package process
+
 /*
 	step3: LoginMesResponse
 		1. 客户端发送消息
@@ -11,20 +13,27 @@
 
 
 */
-package main
 
 import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"go_code/Netprogram/Task4_multi-communication/step3_LoginMes/common/message"
+	"go_code/Netprogram/Task4_multi-communication/step4_structure/client/utils"
+	"go_code/Netprogram/Task4_multi-communication/step4_structure/common/message"
 	"net"
 )
+
+type UserProcess struct {
+	//字段分析，
+	//login需要什么东西
+	//暂时不需要任何字段
+
+}
 
 //尽量用error的形式返回，
 //error可以返回各种错误，自定义，描述信息
 //变量尽量使用一样的
-func login(userId int, userPw string) (err error) {
+func (this *UserProcess) Login(userId int, userPw string) (err error) {
 	//开始定协议
 	//fmt.Printf("userId= %d,userPw = %s", userId, userPw)
 	//return nil
@@ -76,7 +85,9 @@ func login(userId int, userPw string) (err error) {
 		fmt.Println("conn.Write(pkgLeg) fails")
 		return
 	}
-	//fmt.Println("send len succ:", len(data))
+
+	//5.1手动添加用户在redis.
+	fmt.Println("send  succ:", string(data))
 
 	//step3:发送消息本身
 
@@ -90,7 +101,12 @@ func login(userId int, userPw string) (err error) {
 	// time.Sleep(3 * time.Second)
 	// fmt.Println("sleep ")
 	//3.2
-	mes, err = readPkg(conn)
+
+	//4.1创建一个tf 实例,可以考虑全局话，
+	tf := &utils.Transfer{
+		Conn: conn,
+	}
+	mes, err = tf.ReadPkg()
 	if err != nil {
 		fmt.Println("readPkg fails:", err)
 	}
@@ -103,6 +119,15 @@ func login(userId int, userPw string) (err error) {
 	}
 	if loginResMes.Code == 200 {
 		fmt.Println("succ")
+		/*
+			4.1显示登陆成功的菜单..
+				for 可以写在里面
+				需要写一个协程，保持与服务器端的通信，如果服务器有数据推送给我们，可以直接get
+		*/
+		go serverProcessMes(conn)
+		for {
+			ShowMenu()
+		}
 	} else if loginResMes.Code == 500 {
 		fmt.Println("login err:", loginResMes.Error)
 	}

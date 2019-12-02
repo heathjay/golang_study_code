@@ -1,20 +1,32 @@
-// step3: 工具包
-package main
+package utils
 
 import (
 	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"go_code/Netprogram/Task4_multi-communication/step3_LoginMes/common/message"
+	"go_code/Netprogram/Task4_multi-communication/step5_redis/common/message"
 	"net"
 )
 
-func readPkg(conn net.Conn) (mes message.Message, err error) {
+//4.1将方法关联到结构体中
+type Transfer struct {
+	//分析需要什么字段
+	//1. 连接
+	//2. 缓冲
+	//暂时不考虑封装
+	Conn net.Conn
+	Buf  [8064]byte //传输时，使用的缓冲
+
+}
+
+//3.1封装成函数, readPkg
+//3.2优化封装结构,需要readPkg可以读取不同的消息接口
+func (this *Transfer) ReadPkg() (mes message.Message, err error) {
 	//获取长度
-	buf := make([]byte, 8096)
+	//buf := make([]byte, 8096)
 	fmt.Println("wait for the message from the sender")
-	_, err = conn.Read(buf[:4])
+	_, err = this.Conn.Read(this.Buf[:4])
 	if err != nil {
 		//fmt.Println("len sent error:", err)
 		//自定义error
@@ -25,10 +37,10 @@ func readPkg(conn net.Conn) (mes message.Message, err error) {
 
 	//根据buf[:4]判断到底读多少字节
 	var pkgLen uint32
-	pkgLen = binary.BigEndian.Uint32(buf[0:4])
+	pkgLen = binary.BigEndian.Uint32(this.Buf[0:4])
 
 	//根据pkgLen读取消息内容
-	n, err := conn.Read(buf[:pkgLen]) //从conn读取总共pkgLen放进buf中
+	n, err := this.Conn.Read(this.Buf[:pkgLen]) //从conn读取总共pkgLen放进buf中
 	if n != int(pkgLen) || err != nil {
 		//fmt.Println("read LoginMes fails")
 		//err = errors.New("read body fails")
@@ -36,7 +48,7 @@ func readPkg(conn net.Conn) (mes message.Message, err error) {
 	}
 
 	//反序列化 -> message.Message --> &mes！！
-	err = json.Unmarshal(buf[:pkgLen], &mes)
+	err = json.Unmarshal(this.Buf[:pkgLen], &mes)
 	if err != nil {
 		fmt.Println(" LoginMes unmarshall fails")
 		return
@@ -45,20 +57,21 @@ func readPkg(conn net.Conn) (mes message.Message, err error) {
 	return
 }
 
-func writePkg(conn net.Conn, data []byte) (err error) {
+//3.2.3工具函数
+func (this *Transfer) WritePkg(data []byte) (err error) {
 	//先发送一个长度
 	var pkgLen uint32
 	pkgLen = uint32(len(data))
-	var buf [4]byte
-	binary.BigEndian.PutUint32(buf[:4], pkgLen)
-	n, err := conn.Write(buf[:4])
+	//var buf [4]byte
+	binary.BigEndian.PutUint32(this.Buf[:4], pkgLen)
+	n, err := this.Conn.Write(this.Buf[:4])
 	if err != nil || n != 4 {
 		fmt.Println("conn.Write(pkgLeg) fails")
 		return
 	}
 
 	//发送内容
-	n, err = conn.Write(data)
+	n, err = this.Conn.Write(data)
 	if n != int(pkgLen) || err != nil {
 		fmt.Println("conn write bytes fails:", err)
 		return
