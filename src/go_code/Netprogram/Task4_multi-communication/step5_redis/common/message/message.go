@@ -2,9 +2,10 @@ package message
 
 //定义消息常量
 const (
-	LoginMesType    = "LoginMes"
-	LoginResMesType = "LoginResMes"
-	RegisterMesType = "RegisterMes"
+	LoginMesType       = "LoginMes"
+	LoginResMesType    = "LoginResMes"
+	RegisterMesType    = "RegisterMes"
+	RegisterResMesType = "RegisterResMes"
 )
 
 type Message struct {
@@ -26,5 +27,11 @@ type LoginResMes struct {
 }
 
 type RegisterMes struct {
-	//
+	//6.1注册类型
+	User User `json:"user"`
+}
+
+type RegisterResMes struct {
+	Code  int    `json:"code"`  //400该用户已经占用， 200注册成功
+	Error string `json:"error"` // 错误信息
 }

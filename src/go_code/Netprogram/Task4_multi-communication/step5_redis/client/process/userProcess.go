@@ -18,9 +18,10 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"go_code/Netprogram/Task4_multi-communication/step4_structure/client/utils"
-	"go_code/Netprogram/Task4_multi-communication/step4_structure/common/message"
+	"go_code/Netprogram/Task4_multi-communication/step5_redis/client/utils"
+	"go_code/Netprogram/Task4_multi-communication/step5_redis/common/message"
 	"net"
+	"os"
 )
 
 type UserProcess struct {
@@ -28,6 +29,74 @@ type UserProcess struct {
 	//login需要什么东西
 	//暂时不需要任何字段
 
+}
+
+/*
+	6.4在process增加一个Register方法完成注册任务
+*/
+func (this *UserProcess) Register(userId int, userPw string, userName string) (err error) {
+	conn, err := net.Dial("tcp", "localhost:8889")
+	if err != nil {
+		fmt.Println("conn err")
+		return
+	}
+	defer conn.Close()
+
+	//2.准备发送信息
+	var mes message.Message
+	mes.Type = message.RegisterMesType
+
+	//3.一个registerMes结构体
+	var registerMes message.RegisterMes
+	registerMes.User.UserId = userId
+	registerMes.User.UserPw = userPw
+	registerMes.User.UserName = userName
+
+	data, err := json.Marshal(registerMes)
+	//mes.Data = registerMes	//
+	if err != nil {
+		fmt.Println("json error")
+		return
+	}
+
+	//data 切片形式
+	mes.Data = string(data)
+	//6.mes 序列化 到发送切片并序列化
+	data, err = json.Marshal(mes)
+	if err != nil {
+		fmt.Println("mes json error")
+		return
+	}
+	tf := &utils.Transfer{
+		Conn: conn,
+	}
+
+	err = tf.WritePkg(data)
+	if err != nil {
+		fmt.Println("发送消息错误:", err)
+	}
+
+	mes, err = tf.ReadPkg() //mes 就是RegisterResMes
+	if err != nil {
+		fmt.Println("readPkg fails:", err)
+	}
+
+	//3.2将mes 反序列化
+	var registerResMes message.RegisterResMes
+	err = json.Unmarshal([]byte(mes.Data), &registerResMes)
+	if err != nil {
+		fmt.Println("loginResMes unmarshal fails:", err)
+		return
+	}
+	if registerResMes.Code == 200 {
+		fmt.Println("register succ")
+		os.Exit(0)
+	} else {
+		fmt.Println("login err:", registerResMes.Error)
+		os.Exit(0)
+	}
+
+	return
 }
 
 //尽量用error的形式返回，
@@ -128,7 +197,7 @@ func (this *UserProcess) Login(userId int, userPw string) (err error) {
 		for {
 			ShowMenu()
 		}
-	} else if loginResMes.Code == 500 {
+	} else {
 		fmt.Println("login err:", loginResMes.Error)
 	}
 

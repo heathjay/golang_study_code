@@ -25,6 +25,11 @@ func (this *Processor) serverProcess(mes *message.Message) (err error) {
 		}
 		err = up.ServerProcessLogin(mes)
 	case message.RegisterMesType:
+		//6.2
+		up := &process2.UserProcessor{
+			Conn: this.Conn,
+		}
+		err = up.ServerProcessRegister(mes) //type : data 需要验证是否在服务器里面有了
 	default:
 		fmt.Println("消息类型不存在，无法处理")
 	}

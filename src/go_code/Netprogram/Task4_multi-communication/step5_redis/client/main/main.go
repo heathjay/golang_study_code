@@ -19,6 +19,7 @@ import (
 //用户id 和密码
 var userId int
 var userPw string
+var userName string
 
 func main() {
 	//接受输入
@@ -50,7 +51,20 @@ func main() {
 			up := &process.UserProcess{}
 			up.Login(userId, userPw)
 		case 2:
+			/*
+				6.2进行注册处理
+					调用UserProcess完成注册请求
+			*/
+			fmt.Println("注册用户")
+			fmt.Println("用户id:")
+			fmt.Scanln(&userId)
+			fmt.Println("输入密码：")
+			fmt.Scanln(&userPw)
+			fmt.Println("用户名称：")
+			fmt.Scanln(&userName)
 			fmt.Println("registeration ")
+			up := &process.UserProcess{}
+			up.Register(userId, userPw, userName)
 			//loop = false
 		case 3:
 			fmt.Println("bye")

@@ -12,12 +12,25 @@
 		3.客户端和服务器端的交互，通过utils
 		4.服务器端用dao操作后台
 		5.初始化连接池，从连接池里面初始化一批连接池，通过服务器来维护。redis.go
+
+
+		5.1输入用户信息提示相应结果信息
+			1. 用户不存在，你可以重新注册再登陆
+			2. 你的密码不正确
+		5.2 需要对redis进行初始化，redis.go放在main包里面
+*/
+
+/*
+	6.注册步骤
+		1. common/message/message.go 新增加两个message类型
 */
 package main
 
 import (
 	"fmt"
+	"go_code/Netprogram/Task4_multi-communication/step5_redis/server/model"
 	"net"
+	"time"
 )
 
 //gorountine
@@ -163,7 +176,23 @@ func process(conn net.Conn) {
 // 	return
 // }
 
+/*
+	5.3编写一个函数完成对UserDao的初始化任务
+*/
+func initUserDao() {
+	//这里的pool本身就是一个全局变量
+	//注意初始化的顺序问题，先调用initPool再调用iniUserDao
+	model.MyUserDao = model.NewUserDao(pool)
+}
+
+func init() {
+	//5.2当服务器启动时，初始化redis连接池
+	initPool("localhost:6379", 16, 0, 300*time.Second)
+	//5.3初始化MyUserDao
+	initUserDao()
+}
 func main() {
+
 	fmt.Println("服务器再8889端口监听")
 	listen, err := net.Listen("tcp", "127.0.0.1:8889")
 	if err != nil {
