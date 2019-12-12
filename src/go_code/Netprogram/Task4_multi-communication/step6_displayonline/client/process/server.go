@@ -1,8 +1,10 @@
 package process
 
 import (
+	"encoding/json"
 	"fmt"
 	"go_code/Netprogram/Task4_multi-communication/step6_displayonline/client/utils"
+	"go_code/Netprogram/Task4_multi-communication/step6_displayonline/common/message"
 	"net"
 	"os"
 )
@@ -21,6 +23,7 @@ func ShowMenu() {
 
 	switch key {
 	case 1:
+		outputOnelineUser()
 		fmt.Println("显示在线用户列表")
 	case 2:
 		fmt.Println("发送消息")
@@ -50,7 +53,20 @@ func serverProcessMes(Conn net.Conn) {
 		}
 
 		//如果读取到了消息又是下一步处理逻辑
-		fmt.Println("mes = ", mes)
+		//fmt.Println("mes = ", mes)
+		//7.44
+		switch mes.Type {
+		case message.NotifyUserStatusMesType: //通知某人上线了
+			//1.提取notifyMes
+			var notifyUserStatusMes message.NotifyUserStatusMes
+			json.Unmarshal([]byte(mes.Data), &notifyUserStatusMes)
+			updateUserStatus(&notifyUserStatusMes)
+			//2. 把这个用户的信息，状态保存在客户的map中map[int] User
+			//
+		default:
+			//无法处理该类型
+			fmt.Println("暂时无法识别该类型")
+		}
 
 	}
 }

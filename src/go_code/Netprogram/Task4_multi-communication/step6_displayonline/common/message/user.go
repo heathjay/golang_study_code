@@ -8,7 +8,8 @@ package message
 
 type User struct {
 	//tag不要忘记
-	UserId   int    `json:"userId"`
-	UserPw   string `json:"userPw"`
-	UserName string `json:"userName"`
+	UserId     int    `json:"userId"`
+	UserPw     string `json:"userPw"`
+	UserName   string `json:"userName"`
+	UserStatus int    `json:"userStatus"`
 }

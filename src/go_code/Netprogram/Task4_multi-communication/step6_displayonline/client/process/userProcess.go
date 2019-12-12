@@ -218,7 +218,13 @@ func (this *UserProcess) Login(userId int, userPw string) (err error) {
 				continue
 			}
 			fmt.Println("用户id:\t", v)
+			user := &message.User{
+				UserId:     v,
+				UserStatus: message.UserOnline,
+			}
+			onlineUsers[v] = user
 		}
+
 		fmt.Println("\n\n")
 		go serverProcessMes(conn)
 		for {
