@@ -8,9 +8,9 @@ import (
 )
 
 type ValNode struct {
-	row int
-	col int
-	val int
+	Row int `json:row`
+	Col int `json:col`
+	Val int `json:val`
 }
 
 func main() {
@@ -34,18 +34,19 @@ func main() {
 
 	//标准的稀疏数组，应该还有一个记录原始的二维数组的规模和默认值
 	valNode := ValNode{
-		row: 11,
-		col: 11,
-		val: 0,
+		Row: 11,
+		Col: 11,
+		Val: 0,
 	}
+
 	for i, v := range chessMap {
 		for j, v2 := range v {
 			if v2 != 0 {
 				//创建一个节点
 				valNode = ValNode{
-					row: i,
-					col: j,
-					val: v2,
+					Row: i,
+					Col: j,
+					Val: v2,
 				}
 
 				sparseArr = append(sparseArr, valNode)
@@ -68,33 +69,50 @@ func main() {
 	}
 	fmt.Println("往文件里面写存盘")
 	writer := bufio.NewWriter(file)
-	encoder := json.NewEncoder(writer)
-	for i := 0; i < len(sparseArr); i++ {
-		err := encoder.Encode(sparseArr[i])
-		if err != nil {
-			fmt.Println("json input err:", err)
-		}
+	//encoder := json.NewEncoder(writer)
+	//writer := bufio.NewWriter(file)
+	//encoder := json.NewEncoder(writer)
+	// for i := 0; i < len(sparseArr); i++ {
+	// 	err := encoder.Encode(sparseArr[i])
+	// 	if err != nil {
+	// 		fmt.Println("json input err:", err)
+	// 	}
 
-		// str := fmt.Sprint(data)
-		// // fmt.Println(str)
-		// writer.WriteString(str)
+	// 	// str := fmt.Sprint(data)
+	// 	// // fmt.Println(str)
+	// 	// writer.WriteString(str)
+	// }
+	fmt.Println(sparseArr)
+	data, err := json.Marshal(sparseArr)
+	//fmt.Println(data)
+	if err != nil {
+		fmt.Println("json err")
 	}
+	writer.Write(data)
+	writer.Flush()
 	//如何恢复原始的数组
 	//1. 打开文件，恢复数组
 	file, err = os.Open(filePath)
 	defer file.Close()
 
-	var temp *ValNode
+	// var temp *ValNode
 	reader := bufio.NewReader(file)
-	decoder := json.NewDecoder(reader)
-	err = decoder.Decode(&temp)
+	// decoder := json.NewDecoder(reader)
+	// err = decoder.Decode(&temp)
+	// if err != nil {
+	// 	fmt.Println("decoder err")
+	// 	return
+	// }
+	// fmt.Println(temp)
+	// var chessMap2 [11][11]int
+	data1, _, err := reader.ReadLine()
 	if err != nil {
-		fmt.Println("decoder err")
+		fmt.Println("read err:", err)
 		return
 	}
-	fmt.Println(temp)
-	// var chessMap2 [11][11]int
-	// //var sparseArr2 []ValNode
+	var sparseArr2 []ValNode
+	json.Unmarshal(data1, &sparseArr2)
+	fmt.Println(sparseArr2)
 	// for {
 
 	// 	chessMap2[temp.row][temp.col] = temp.val
@@ -104,17 +122,18 @@ func main() {
 
 	// //遍历稀疏数组，
 	// //遍历文件的每一行
-	// for _, valNode := range sparseArr {
-	// 	if valNode.val == 0 {
-	// 		continue
-	// 	}
-	// 	chessMap2[valNode.row][valNode.col] = valNode.val
-	// }
-	// for _, v := range chessMap2 {
-	// 	for _, v2 := range v {
-	// 		fmt.Printf("%d\t", v2)
-	// 	}
-	// 	fmt.Println()
-	// }
+	var chessMap2 [11][11]int
+	for _, valNode := range sparseArr2 {
+		if valNode.Val == 0 {
+			continue
+		}
+		chessMap2[valNode.Row][valNode.Col] = valNode.Val
+	}
+	for _, v := range chessMap2 {
+		for _, v2 := range v {
+			fmt.Printf("%d\t", v2)
+		}
+		fmt.Println()
+	}
 
 }
