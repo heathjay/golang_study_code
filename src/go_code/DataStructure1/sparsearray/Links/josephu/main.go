@@ -100,12 +100,10 @@ func PlayGame(first *Boy, startNo int, countNum int) {
 		}
 		tail = tail.Next
 	}
-	fmt.Println(tail.No)
 	//让first移动到startNo
 	for i := 0; i <= startNo-1; i++ {
 		first = first.Next
 		tail = tail.Next
-
 	}
 	//开始数countNum,然后就开始删除first 指向的小孩
 	for {
